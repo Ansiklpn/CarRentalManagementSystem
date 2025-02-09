@@ -1,20 +1,6 @@
-```markdown
 # Car Rental Management System
 
 The Car Rental Management System is a Java-based backend application that demonstrates core Object-Oriented Programming principles alongside robust transaction handling using JDBC. It connects to a PostgreSQL database to manage users, a fleet of cars, and the booking process. The system supports two roles: **Admin** and **Customer**. Admin users can manage the car inventory and view statistics, while customers can view available cars and make bookings.
-
-## Table of Contents
-
-- [Features](#features)
-- [Requirements](#requirements)
-- [Installation](#installation)
-- [Database Setup](#database-setup)
-- [Running the Application](#running-the-application)
-- [Project Structure](#project-structure)
-- [Usage](#usage)
-- [Troubleshooting](#troubleshooting)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
@@ -46,7 +32,7 @@ The Car Rental Management System is a Java-based backend application that demons
 
 1. **Clone the Repository**
 
-   ```bash
+   ```
    git clone https://github.com/Ansiklpn/CarRentalManagementSystem
    cd CarRentalManagementSystem
    ```
@@ -97,7 +83,7 @@ The Car Rental Management System is a Java-based backend application that demons
 
    ```
    GRANT USAGE, SELECT ON SEQUENCE bookings_booking_id_seq TO carrental_user;
-
+ ```
 CarRentalManagementSystem/
 ├── src/
 │   ├── postgresql-42.7.5 (1).jar	  # PostgreSQL JDBC Driver
@@ -109,6 +95,7 @@ CarRentalManagementSystem/
 │        └── Booking.java             # Booking model class (includes transaction support)
 ├── utils/
 │   └── VehicleFactory.java           # VehicleFactory class
+```
 
 ```
 
