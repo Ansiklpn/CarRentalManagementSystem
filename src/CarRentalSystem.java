@@ -184,8 +184,9 @@ public class CarRentalSystem {
             System.out.println("2. Add a new car");
             System.out.println("3. Delete a car");
             System.out.println("4. Update car details");
-            System.out.println("5. View statistics");
-            System.out.println("6. Back to main menu");
+            System.out.println("5. Search car by ID");  // Новый пункт для поиска
+            System.out.println("6. View statistics");
+            System.out.println("7. Back to main menu");
             System.out.print("Enter your choice: ");
 
             String input = scanner.nextLine().trim();
@@ -193,7 +194,7 @@ public class CarRentalSystem {
             try {
                 choice = Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("Invalid choice. Please enter a number (1-6).");
+                System.out.println("Invalid choice. Please enter a number (1-7).");
                 continue;
             }
 
@@ -211,9 +212,12 @@ public class CarRentalSystem {
                     updateCarDetails();
                     break;
                 case 5:
-                    viewStatistics();
+                    searchCarById();  // Вызов функции поиска по car_id
                     break;
                 case 6:
+                    viewStatistics();
+                    break;
+                case 7:
                     return; // Return to main menu
                 default:
                     System.out.println("Invalid choice. Please try again.");
@@ -368,7 +372,8 @@ public class CarRentalSystem {
             System.out.println("\n=== Customer Menu ===");
             System.out.println("1. View available cars");
             System.out.println("2. Book a car");
-            System.out.println("3. Back to main menu");
+            System.out.println("3. Search car by ID");  // Новый пункт для поиска
+            System.out.println("4. Back to main menu");
             System.out.print("Enter your choice: ");
 
             String input = scanner.nextLine().trim();
@@ -376,7 +381,7 @@ public class CarRentalSystem {
             try {
                 choice = Integer.parseInt(input);
             } catch (NumberFormatException e) {
-                System.out.println("Invalid choice. Please enter a number (1-3).");
+                System.out.println("Invalid choice. Please enter a number (1-4).");
                 continue;
             }
 
@@ -388,12 +393,49 @@ public class CarRentalSystem {
                     bookCar(customer);
                     break;
                 case 3:
+                    searchCarById();  // Вызов функции поиска по car_id
+                    break;
+                case 4:
                     return; // Exit back to main menu
                 default:
                     System.out.println("Invalid choice. Please try again.");
             }
         }
     }
+
+    private static void searchCarById() {
+        System.out.print("Enter the Car ID to search: ");
+        String carIdInput = scanner.nextLine().trim();
+        int carId;
+        try {
+            carId = Integer.parseInt(carIdInput);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid Car ID. Please enter a number.");
+            return;
+        }
+
+        String query = "SELECT * FROM cars WHERE car_id = ?";
+        try (Connection connection = databaseHandler.getConnection();
+             PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, carId);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                System.out.printf("Car ID: %d, Make: %s, Model: %s, Year: %d, Rental Rate: %.2f, Available: %b%n",
+                        resultSet.getInt("car_id"),
+                        resultSet.getString("make"),
+                        resultSet.getString("model"),
+                        resultSet.getInt("year"),
+                        resultSet.getDouble("rental_rate"),
+                        resultSet.getBoolean("is_available"));
+            } else {
+                System.out.println("Car not found.");
+            }
+        } catch (SQLException e) {
+            System.err.println("Error searching for car: " + e.getMessage());
+        }
+    }
+
 
     // Book a car by selecting from available cars and specifying rental days, using a transaction
     private static void bookCar(User customer) {
